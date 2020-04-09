@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -10,11 +11,18 @@ import (
 	coap "github.com/go-ocf/go-coap"
 )
 
-const argsNum = 3
+// Response is a coap response
+type Response struct {
+	Name string
+	Time uint64
+}
+
+// ArgsNum is the number of required arguments for application
+const ArgsNum = 3
 
 func main() {
-	if len(os.Args) != argsNum {
-		fmt.Printf("usage: coap-demo [address] [path]\n")
+	if len(os.Args) != ArgsNum {
+		fmt.Printf("usage: coap-demo [address e.g. 192.168.73.192:1378] [path e.g. elahe]\n")
 		return
 	}
 
@@ -29,10 +37,14 @@ func main() {
 	defer cancel()
 
 	resp, err := co.GetWithContext(ctx, path)
-
 	if err != nil {
 		log.Fatalf("Error sending request: %v", err)
 	}
 
-	log.Printf("Response payload: %s", string(resp.Payload()))
+	var r Response
+	if err := json.Unmarshal(resp.Payload(), &r); err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("Response payload: %+v", r)
 }
