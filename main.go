@@ -11,12 +11,6 @@ import (
 	coap "github.com/go-ocf/go-coap"
 )
 
-// Response is a coap response
-type Response struct {
-	Name string
-	Time uint64
-}
-
 // ArgsNum is the number of required arguments for application
 const ArgsNum = 3
 
@@ -41,7 +35,7 @@ func main() {
 		log.Fatalf("Error sending request: %v", err)
 	}
 
-	var r Response
+	var r map[string]interface{}
 	if err := json.Unmarshal(resp.Payload(), &r); err != nil {
 		log.Fatal(err)
 	}
