@@ -27,13 +27,15 @@ func main() {
 
 	path := os.Args[2]
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 
 	resp, err := co.GetWithContext(ctx, path)
 	if err != nil {
 		log.Fatalf("Error sending request: %v", err)
 	}
+
+	log.Printf("Response: %d", resp.Code())
 
 	var r map[string]interface{}
 	if err := json.Unmarshal(resp.Payload(), &r); err != nil {
