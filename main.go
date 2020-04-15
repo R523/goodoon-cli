@@ -35,7 +35,7 @@ func main() {
 		log.Fatalf("Error sending request: %v", err)
 	}
 
-	log.Printf("Response: %d", resp.Code())
+	log.Printf("Response code: %s", resp.Code())
 
 	var r map[string]interface{}
 	if err := json.Unmarshal(resp.Payload(), &r); err != nil {
