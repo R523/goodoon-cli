@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	coap "github.com/go-ocf/go-coap"
+	"github.com/plgd-dev/go-coap/v2/udp"
 )
 
 // ArgsNum is the number of required arguments for application
@@ -20,9 +20,9 @@ func main() {
 		return
 	}
 
-	co, err := coap.Dial("udp", os.Args[1])
+	co, err := udp.Dial(os.Args[1])
 	if err != nil {
-		log.Fatalf("Error dialing: %v", err)
+		log.Fatalf("error dialing: %v", err)
 	}
 
 	path := os.Args[2]
@@ -30,17 +30,22 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 
-	resp, err := co.GetWithContext(ctx, path)
+	resp, err := co.Get(ctx, path)
 	if err != nil {
-		log.Fatalf("Error sending request: %v", err)
+		log.Fatalf("error sending request: %v", err)
 	}
 
-	log.Printf("Response code: %s", resp.Code())
+	log.Printf("response code: %s", resp.Code())
+
+	body, err := resp.ReadBody()
+	if err != nil {
+		log.Fatal("cannot read the payload %v", err)
+	}
 
 	var r map[string]interface{}
-	if err := json.Unmarshal(resp.Payload(), &r); err != nil {
+	if err := json.Unmarshal(body, &r); err != nil {
 		log.Fatal(err)
 	}
 
-	log.Printf("Response payload: %+v", r)
+	log.Printf("response payload: %+v", r)
 }

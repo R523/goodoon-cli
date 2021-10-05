@@ -1,5 +1,5 @@
-# coap-demo
-[![Drone (cloud)](https://img.shields.io/drone/build/R523/coap-demo.svg?style=flat-square)](https://cloud.drone.io/R523/coap-demo)
+# gooldoon client
 
 ## Introduction
-Easy to use client just for having more fun with [esp32-demo](https://github.com/R523/esp32-demo).
+
+Gooldoon cli connects to gooldoon node over the wifi by the CoAP protocol.
